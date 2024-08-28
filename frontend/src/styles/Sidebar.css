@@ -1,0 +1,39 @@
+/* Sidebar.css */
+.sidebar {
+    width: 200px;
+    background-color: #f7f7f7;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    padding-top: 20px;
+    box-shadow: purple;
+    margin-right: 5%;
+  }
+  
+  .sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .sidebar ul li {
+    padding: 10px 20px;
+    cursor: pointer;
+    
+    font-size: 16px;
+  }
+  
+  .sidebar ul li.active, .sidebar ul li:hover {
+    background-color: #e0e0e0;
+    font-weight: bold;
+  }
+  .active{
+    color: purple;
+}
+.down{
+    margin-left: 11vh;
+}
+.down1{
+    margin-left: 8vh;
+}

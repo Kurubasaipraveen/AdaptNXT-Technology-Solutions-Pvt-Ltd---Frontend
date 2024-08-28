@@ -1,0 +1,66 @@
+.dashboard-container {
+    display: flex;
+    justify-content: space-between; /* Distribute space between the charts */
+    gap: 20px; /* Add space between the chart wrappers */
+    padding: 20px;
+    background-color: #f4f4f4; /* Set a background for the dashboard container */
+}
+
+.chart-wrapper, .chart-wrapper1 {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px; /* Add some rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+}
+
+.chart-wrapper {
+    width: 50%; /* Adjust the width to fit the layout */
+}
+
+/* General styling for the container around the pie chart */
+.chart-wrapper1 {
+    width: 35vw;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Styling for the legend labels */
+.chartjs-legend {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.chartjs-legend li {
+    list-style: none;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+    display: inline-flex;
+    align-items: center;
+}
+
+.chartjs-legend li span {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    margin-right: 10px;
+    border-radius: 50%; /* Makes the legend markers circular */
+}
+
+/* Hover effect on legend items */
+.chartjs-legend li:hover {
+    color: #FF6347; /* Change text color on hover */
+    cursor: pointer;
+}
+
+/* Ensuring the canvas takes up the full width of its container */
+.chart-wrapper1 canvas {
+    width: 85% !important;
+    height: auto !important;
+}
+h2{
+    color: purple;
+}
