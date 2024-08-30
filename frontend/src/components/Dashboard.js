@@ -11,68 +11,64 @@ import {
   Legend,
   ArcElement,
 } from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
-ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Legend, ArcElement);
+ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Legend, ArcElement, ChartDataLabels);
 
-// Custom plugin for Pie chart
+// Updated custom plugin for Pie chart to display only the "Total" text in the center
 const doughnutCenterTextPlugin = {
   id: 'doughnutCenterText',
   beforeDraw(chart) {
-    const { ctx, chartArea, data } = chart;
     if (chart.config.type === 'pie') {
+      const { ctx, chartArea } = chart;
       const { width, height } = chartArea;
       const centerX = width / 2;
       const centerY = height / 2;
-      const total = data.datasets[0].data.reduce((a, b) => a + b, 0);
+
+      // The text to display in the center
+      const totalText = `Total`;
 
       ctx.save();
-      ctx.font = 'bold 16px Arial';
+      ctx.font = 'bold 30px Arial'; // Customize the font size here
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillStyle = '#333';
+      ctx.fillStyle = '#000000'; // Set the text color to black
 
-      // Draw total in the center
-      ctx.fillText('Total: 2659', centerX, centerY - 10);
-      // Draw percentage text
-      data.datasets[0].data.forEach((value, index) => {
-        const percentage = ((value / total) * 100).toFixed(1);
-        const label = data.labels[index];
-        const angle = (index * Math.PI * 2) / data.datasets[0].data.length;
-        const radius = Math.min(centerX, centerY) * 0.5;
-        const x = centerX + radius * Math.cos(angle);
-        const y = centerY + radius * Math.sin(angle);
-        ctx.fillText(`${label}: ${percentage}%`, x, y);
-      });
+      // Draw the total label
+      ctx.fillText(totalText, centerX, centerY);
+
       ctx.restore();
     }
   },
 };
 
+ChartJS.register(doughnutCenterTextPlugin);
+
 const Dashboard = () => {
   // Data for Line Chart
   const lineData = {
-    labels: ['6/30/2024-7/6/2024', '7/7/2024-7/13/2024','7/14/2024-7/27/2024'],
+    labels: ['6/30/2024-7/6/2024', '7/7/2024-7/13/2024', '7/14/2024-7/27/2024'],
     datasets: [
       {
         label: 'Orders',
-        data: [4, 3, 2, 2, 4],
-        borderColor: ' #FFA500', 
+        data: [4.0, 2.0, 2],
+        borderColor: '#FFA500',
         backgroundColor: '#FFA500',
         fill: false,
         tension: 0.1,
-        yAxisID: 'y1', 
+        yAxisID: 'y1',
         pointBackgroundColor: '#FFA500',
         pointBorderColor: '#FFA500',
         pointHoverRadius: 6,
       },
       {
         label: 'Sales',
-        data: [1404, 1200, 900, 800, 600],
-        borderColor: '#ADD8E6', // SteelBlue color for Sales
+        data: [1.4, 0.8, 0.5], // Data points for the blue line
+        borderColor: '#ADD8E6',
         backgroundColor: '#ADD8E6',
         fill: false,
         tension: 0.1,
-        yAxisID: 'y', // Default y axis
+        yAxisID: 'y',
         pointBackgroundColor: '#ADD8E6',
         pointBorderColor: '#ADD8E6',
         pointHoverRadius: 6,
@@ -86,21 +82,35 @@ const Dashboard = () => {
         type: 'linear',
         position: 'left',
         beginAtZero: true,
+        min: 0,
+        max: 1.6, // Set the max value for the Sales axis
         title: {
           display: true,
-          
+        },
+        ticks: {
+          stepSize: 0.4,
+          callback: function (value) {
+            return value.toFixed(1) + 'k'; // Ensure 1.6 is displayed as 1.6k
+          },
         },
       },
       y1: {
         type: 'linear',
         position: 'right',
         beginAtZero: true,
+        min: 0,
+        max: 4, // Adjusted to match data points
         grid: {
-          drawOnChartArea: false, // only want the grid lines for one axis
+          drawOnChartArea: false, // Only want the grid lines for one axis
         },
         title: {
           display: true,
-          
+        },
+        ticks: {
+          stepSize: 1,
+          callback: function (value) {
+            return value.toFixed(1) + 'k'; // Ensure 'k' suffix is applied to right y-axis labels
+          },
         },
       },
     },
@@ -112,13 +122,12 @@ const Dashboard = () => {
       tooltip: {
         callbacks: {
           label: function (context) {
-            if (context.dataset.label === 'Orders') {
-              return `Orders: ${context.raw}`;
-            } else {
-              return `Sales: $${context.raw}`;
-            }
+            return `${context.dataset.label}: ${context.raw.toFixed(1)}k`; // Add 'k' to tooltip values for both datasets
           },
         },
+      },
+      datalabels: {
+        display: false, // Disable data labels on the chart lines
       },
     },
   };
@@ -128,13 +137,13 @@ const Dashboard = () => {
     labels: ['WooCommerce Store', 'Shopify Store'],
     datasets: [
       {
-        data: [55.8, 44.2], 
-        backgroundColor: ['#FF6347', '#4682B4'], 
+        data: [55.8, 44.2],
+        backgroundColor: ['#FF6347', '#4682B4'],
         hoverBackgroundColor: ['#FF8567', '#5A9BD4'],
       },
     ],
   };
-  
+
   const pieOptions = {
     plugins: {
       legend: {
@@ -146,7 +155,7 @@ const Dashboard = () => {
             family: 'Arial, sans-serif',
             weight: 'bold',
           },
-          color: '#333',
+          color: '#000',
           padding: 15,
           boxWidth: 15,
           boxHeight: 15,
@@ -155,8 +164,8 @@ const Dashboard = () => {
       },
       tooltip: {
         callbacks: {
-          label: function(tooltipItem) {
-            return tooltipItem.label + ': ' + tooltipItem.raw.toFixed(1) + '%'; 
+          label: function (tooltipItem) {
+            return tooltipItem.label + ': ' + tooltipItem.raw.toFixed(1) + '%';
           },
         },
       },
@@ -164,21 +173,20 @@ const Dashboard = () => {
     },
     maintainAspectRatio: false,
   };
-  
 
   return (
     <div>
-        <h2>Dashboard</h2>
-    <div className="dashboard-container">
-      <div className="chart-wrapper">
-        <h3>Sales vs Orders <i class="bi bi-exclamation-circle"></i></h3>
-        <Line data={lineData} options={lineOptions} />
+      <h2>Dashboard</h2>
+      <div className="dashboard-container">
+        <div className="chart-wrapper">
+          <h3>Sales vs Orders <i className="bi bi-exclamation-circle"></i></h3>
+          <Line data={lineData} options={lineOptions} />
+        </div>
+        <div className="chart-wrapper1">
+          <h3>Portion of Sales <i className="bi bi-exclamation-circle"></i></h3>
+          <Pie data={pieData} options={pieOptions} />
+        </div>
       </div>
-      <div className="chart-wrapper1">
-        <h3>Portion of Sales <i class="bi bi-exclamation-circle"></i></h3>
-        <Pie data={pieData} options={pieOptions} />
-      </div>
-    </div>
     </div>
   );
 };
