@@ -15,27 +15,23 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Legend, ArcElement, ChartDataLabels);
 
-// Updated custom plugin for Pie chart to display only the "Total" text in the center
 const doughnutCenterTextPlugin = {
   id: 'doughnutCenterText',
   beforeDraw(chart) {
-    if (chart.config.type === 'pie') {
-      const { ctx, chartArea } = chart;
-      const { width, height } = chartArea;
-      const centerX = width / 2;
-      const centerY = height / 2;
-
-      // The text to display in the center
-      const totalText = `Total`;
-
+    const { ctx, chartArea } = chart;
+    const { width, height } = chartArea;
+    const centerX = width / 2;
+    const centerY = height / 2;
+    const centerText = 'Total'; 
+    if (chart.config.type === 'pie' || chart.config.type === 'doughnut') {
       ctx.save();
-      ctx.font = 'bold 30px Arial'; // Customize the font size here
+      ctx.font = 'bold 30px Arial';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillStyle = '#000000'; // Set the text color to black
+      ctx.fillStyle = '#000000'; 
 
-      // Draw the total label
-      ctx.fillText(totalText, centerX, centerY);
+      // Draw the center text
+      ctx.fillText(centerText, centerX, centerY);
 
       ctx.restore();
     }
@@ -44,8 +40,11 @@ const doughnutCenterTextPlugin = {
 
 ChartJS.register(doughnutCenterTextPlugin);
 
+
+ChartJS.register(doughnutCenterTextPlugin);
+
 const Dashboard = () => {
-  // Data for Line Chart
+
   const lineData = {
     labels: ['6/30/2024-7/6/2024', '7/7/2024-7/13/2024', '7/14/2024-7/27/2024'],
     datasets: [
@@ -63,7 +62,7 @@ const Dashboard = () => {
       },
       {
         label: 'Sales',
-        data: [1.4, 0.8, 0.5], // Data points for the blue line
+        data: [1.4, 0.8, 0.5], 
         borderColor: '#ADD8E6',
         backgroundColor: '#ADD8E6',
         fill: false,
@@ -83,14 +82,14 @@ const Dashboard = () => {
         position: 'left',
         beginAtZero: true,
         min: 0,
-        max: 1.6, // Set the max value for the Sales axis
+        max: 1.6, 
         title: {
           display: true,
         },
         ticks: {
           stepSize: 0.4,
           callback: function (value) {
-            return value.toFixed(1) + 'k'; // Ensure 1.6 is displayed as 1.6k
+            return value.toFixed(1) + 'k'; 
           },
         },
       },
@@ -99,9 +98,9 @@ const Dashboard = () => {
         position: 'right',
         beginAtZero: true,
         min: 0,
-        max: 4, // Adjusted to match data points
+        max: 4, 
         grid: {
-          drawOnChartArea: false, // Only want the grid lines for one axis
+          drawOnChartArea: false, 
         },
         title: {
           display: true,
@@ -109,7 +108,7 @@ const Dashboard = () => {
         ticks: {
           stepSize: 1,
           callback: function (value) {
-            return value.toFixed(1) + 'k'; // Ensure 'k' suffix is applied to right y-axis labels
+            return value.toFixed(1) + 'k'; 
           },
         },
       },
@@ -122,12 +121,12 @@ const Dashboard = () => {
       tooltip: {
         callbacks: {
           label: function (context) {
-            return `${context.dataset.label}: ${context.raw.toFixed(1)}k`; // Add 'k' to tooltip values for both datasets
+            return `${context.dataset.label}: ${context.raw.toFixed(1)}k`; 
           },
         },
       },
       datalabels: {
-        display: false, // Disable data labels on the chart lines
+        display: false, 
       },
     },
   };
@@ -140,9 +139,13 @@ const Dashboard = () => {
         data: [55.8, 44.2],
         backgroundColor: ['#FF6347', '#4682B4'],
         hoverBackgroundColor: ['#FF8567', '#5A9BD4'],
+        
       },
     ],
   };
+  const piecenterlabel={
+    text:["total 2629"]
+  }
 
   const pieOptions = {
     plugins: {
@@ -159,7 +162,7 @@ const Dashboard = () => {
           padding: 15,
           boxWidth: 15,
           boxHeight: 15,
-          usePointStyle: true, // Makes the legend markers circular
+          usePointStyle: true,
         },
       },
       tooltip: {
@@ -169,11 +172,12 @@ const Dashboard = () => {
           },
         },
       },
-      doughnutCenterText: doughnutCenterTextPlugin, // Register custom plugin
+      doughnutCenterText: doughnutCenterTextPlugin, 
     },
     maintainAspectRatio: false,
+    text:"Total:2629"
   };
-
+  
   return (
     <div>
       <h2>Dashboard</h2>
@@ -184,7 +188,7 @@ const Dashboard = () => {
         </div>
         <div className="chart-wrapper1">
           <h3>Portion of Sales <i className="bi bi-exclamation-circle"></i></h3>
-          <Pie data={pieData} options={pieOptions} />
+          <Pie data={pieData} options={pieOptions} text={piecenterlabel}  />
         </div>
       </div>
     </div>

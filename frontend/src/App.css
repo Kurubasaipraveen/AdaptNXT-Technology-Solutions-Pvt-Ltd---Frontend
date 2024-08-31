@@ -1,20 +1,20 @@
 .App {
   display: flex;
-  height: 100vh; /* Full height */
-  margin: 0; /* Remove default margin */
+  height: 100vh; 
+  margin: 0; 
   
 }
 
 
 .Sidebar {
-  width: 100px; /* Adjust the width as needed */
-  background-color: #f4f4f4; /* Sidebar background color */
-  padding: 20px; /* Padding inside the sidebar */
+  width: 100px; 
+  background-color: #f4f4f4; 
+  padding: 20px; 
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-  margin-right:5%/* Optional shadow for the sidebar */
+  margin-right:5%;
 }
 
 Dashboard {
-  flex: 1; /* Takes up the remaining space */
-  padding: 20px; /* Padding inside the dashboard */
+  flex: 1;
+  padding: 20px; 
 }
